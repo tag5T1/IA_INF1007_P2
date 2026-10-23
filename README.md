@@ -1,2 +1,4 @@
 # IA_INF1007_P2
 Repo pour le projet 2 en INF1007
+
+License du jeu de donnée: CC-0 (public domain)

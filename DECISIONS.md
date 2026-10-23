@@ -19,3 +19,4 @@ Choix du jeu de donnée
 
   Choix final: parties de LoL
     Paramètres des chasons trop subjectifs, comme "danceability" ou "energy". Paramètres des parties de LoL numériques et objectifs.
+    Confirmé par chargeé de lab le 2026-10-23.

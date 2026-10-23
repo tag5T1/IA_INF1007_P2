@@ -11,4 +11,4 @@ jobs:
           python-version: "3.12"
       
       - run: pip install -r requirements.txt
-      - run: python -m pytest /tests -v
+      - run: python -m pytest /IA_INF1007_P2/tests -v

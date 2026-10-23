@@ -1,1 +1,11 @@
+Choix du jeu de donnée
+  Parties de League of Legends:
+    format CSV,
+    9880 lignes,
+    cible quelle équipe gagnera selon les 10 premières minutes
+    40 colonnes, catégorie équipe gagnante,
+    License CC-0: Public domain,
+    aucune données personelle: seulement l'ID de la partie qui référe des utilisateurs anonymes.
+    => acceptable
 
+  

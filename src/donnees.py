@@ -1,7 +1,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
 
-def importer_donnees(source:str="./donnees/high_diamond_ranked_10min.csv") -> pd.DataFrame:
+def importer_donnees(source:str="./donnees/high_diamond_ranked_10min.csv") -> tuple[pd.DataFrame,pd.Series]:
     donnees = pd.read_csv(source)
 
     columns = list(donnees.columns)
@@ -18,22 +19,24 @@ def importer_donnees(source:str="./donnees/high_diamond_ranked_10min.csv") -> pd
     columns.remove("redCSPerMin")
     columns.remove("blueCSPerMin")
     donnees = donnees[columns]
-    return donnees
 
-def train_test_split(donnees:pd.DataFrame, split_index:int) -> tuple[pd.DataFrame, pd.DataFrame]:
-    if not (0 < split_index < donnees.shape[0] - 1):
-        raise ValueError("Wrong split_index: Train or Test data would be empty!")
-    return donnees[:split_index], donnees[split_index:]
+    columns.remove("blueWins")
+    X = donnees[columns]
+    y = donnees["blueWins"]
+    return (X, y)
+
+def split_data(donnees:tuple[pd.DataFrame,pd.Series]) -> list:
+    return train_test_split(donnees[0], donnees[1], test_size=0.2, random_state=1)
 
 if __name__ == "__main__":
     lol = importer_donnees()
-    print(lol.columns)
+    print(lol[0].columns)
 
-    train, test = train_test_split(lol, 7500)
+    X_train, X_test, y_train, y_test = split_data(lol)
 
-    print(train.head())
-    print(test.head())
+    print(X_train.head())
+    print(X_test.head())
 
-    graph = lol.plot()
+    graph = lol[0].plot()
 
     plt.show()

@@ -1,15 +1,27 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-lol = pd.read_csv("./donnees/high_diamond_ranked_10min.csv")
+def importer_donnees(source:str="./donnees/high_diamond_ranked_10min.csv") -> pd.DataFrame:
+    donnees = pd.read_csv(source)
 
-columns = list(lol.columns)
-columns.remove("gameId")
-lol = lol[columns]
+    columns = list(donnees.columns)
+    columns.remove("gameId")
+    columns.remove("redFirstBlood")
+    donnees = donnees[columns]
+    return donnees
 
-#print(columns)
-#print(lol.head())
+def train_test_split(donnees:pd.DataFrame, split_index:int) -> tuple[pd.DataFrame, pd.DataFrame]:
+    return donnees[:split_index], donnees[split_index:]
 
-graph = lol.plot()
+if __name__ == "__main__":
+    lol = importer_donnees()
+    print(lol.columns)
 
-plt.show()
+    train, test = train_test_split(lol, 7500)
+
+    print(train.head())
+    print(test.head())
+
+    graph = lol.plot()
+
+    plt.show()

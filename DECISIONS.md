@@ -20,3 +20,13 @@ Choix du jeu de donnée
   Choix final: parties de LoL
     Paramètres des chasons trop subjectifs, comme "danceability" ou "energy". Paramètres des parties de LoL numériques et objectifs.
     Confirmé par chargeé de lab le 2026-10-23.
+
+-------------------
+
+Au chargement:
+  Élimination des variables:
+    * gameId: Elle ne représente aucune information
+    * redFirstBlood: blueFirstBlood est déjà présente. Elles sont l'inverse l'une de l'autre.
+
+Variable cible: "blueWins"
+-> C'est la variable donnant la solution, de si les bleus ont gagné. Si oui, blueWins=1, Sinon blueWins=0

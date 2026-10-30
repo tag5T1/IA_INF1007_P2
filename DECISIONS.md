@@ -43,4 +43,7 @@ Variable cible: "blueWins"
 
 -------------------
 
-train - test split: utilise un index fixe pour séparer le dataset en deux. Les données sont déjà mélangées, donc inutile de rendre aléatoire.
+train - test split: utilise un index fixe pour séparer le dataset en deux. Les données sont déjà aléatoires, donc inutile de mélanger.
+
+Choix de métrique d'évaluation: exactitude.
+Justification: la cible est binaire, donc un résultats sera toujours soit négatif, soit positif. Cela rend l'exactitude très efficace puisqu'il n'y a pas de proximité à la cible à prendre en compte: soit l'IA est complètement correct, soit elle ne l'est complètement pas.

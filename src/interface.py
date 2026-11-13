@@ -18,8 +18,6 @@ class Interface(tk.Tk):
         colonne_entree_droite = self.creer_colonne(self, self.parametres, False)
         colonne_entree_droite.pack(side='left', anchor='n', expand=True, fill="y")
 
-        self.mainloop()
-
     def creer_top_bar(self, container):
         frame = tk.Frame(container)
         return frame

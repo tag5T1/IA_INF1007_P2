@@ -33,10 +33,7 @@ Au chargement:
     * redTotalGold: redTotalGold = blueTotalGold - blueGoldDiff
     * redGoldDiff: redGoldDiff = -blueGoldDiff
     * redExperienceDiff: redExperienceDiff = -blueExperienceDiff
-    * redGoldPerMin: Pas besoin: on a le total et c'est 10 minutes de game.
-    * blueGoldPerMin: Pas besoin: on a le total et c'est 10 minutes de game.
-    * redCSPerMin: Pas besoin: on a le total et c'est 10 minutes de game.
-    * blueCSPerMin: Pas besoin: on a le total et c'est 10 minutes de game.
+    * redGoldPerMin, blueGoldPerMin, blueCSPerMin, redCSPerMin: Pas besoin: on a le total et nos données sont des échantillons de 10 minutes exacgtement depuis le début de la partie.
 
 Variable cible: "blueWins"
 -> C'est la variable donnant la solution, de si les bleus ont gagné. Si oui, blueWins=1, Sinon blueWins=0

@@ -50,7 +50,7 @@ class Interface(tk.Tk):
         else:
             for i in range(round(len(parametres)/2) + 1, len(parametres)):
                 champ = Champ(frame, i, PARAMETRES_NOMS.get(self.parametres[i], self.parametres[i]), self.parametres_valeurs, self.infos.get(self.parametres[i], {"MIN": 0, "MAX": 0, "MOY": 0}))
-                champ.pack(anchor="e")  
+                champ.pack(anchor="e")
 
         return frame
 

@@ -1,6 +1,7 @@
 import tkinter as tk
 import random
 from tkinter import ttk
+from exceptions import Input_Exception
 
 class Champ(tk.Frame):
     def __init__(self, container:ttk.Frame, index:int, label:str, param_val:list, infos):
@@ -19,7 +20,11 @@ class Champ(tk.Frame):
         champ.pack(side='left')
 
     def changer_valeur_param(self, var, index, mode):
-        self.parametres_valeurs[self.index] = float(self.string_var.get())
+        try:
+            self.parametres_valeurs[self.index] = float(self.string_var.get())
+        except ValueError:
+            if self.string_var.get() != "":
+                self.string_var.set(self.parametres_valeurs[self.index])
 
     def set_random(self):
         self.string_var.set(random.randint(int(self.infos["MIN"]),int(self.infos["MAX"]))) # type: ignore

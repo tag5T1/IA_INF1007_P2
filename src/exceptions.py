@@ -1,2 +1,2 @@
-class Input_Exception(Exception):
+class Input_Exception(ValueError):
     pass

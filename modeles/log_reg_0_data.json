@@ -1,0 +1,137 @@
+{
+  "blueWardsPlaced": {
+    "MIN": 5,
+    "MAX": 250,
+    "MOY": 22
+  },
+  "blueWardsDestroyed": {
+    "MIN": 0,
+    "MAX": 27,
+    "MOY": 2
+  },
+  "blueFirstBlood": {
+    "MIN": 0,
+    "MAX": 1,
+    "MOY": 0
+  },
+  "blueKills": {
+    "MIN": 0,
+    "MAX": 22,
+    "MOY": 6
+  },
+  "blueDeaths": {
+    "MIN": 0,
+    "MAX": 22,
+    "MOY": 6
+  },
+  "blueAssists": {
+    "MIN": 0,
+    "MAX": 29,
+    "MOY": 6
+  },
+  "blueEliteMonsters": {
+    "MIN": 0,
+    "MAX": 2,
+    "MOY": 0
+  },
+  "blueDragons": {
+    "MIN": 0,
+    "MAX": 1,
+    "MOY": 0
+  },
+  "blueHeralds": {
+    "MIN": 0,
+    "MAX": 1,
+    "MOY": 0
+  },
+  "blueTowersDestroyed": {
+    "MIN": 0,
+    "MAX": 4,
+    "MOY": 0
+  },
+  "blueTotalGold": {
+    "MIN": 10730,
+    "MAX": 23701,
+    "MOY": 16503
+  },
+  "blueAvgLevel": {
+    "MIN": 4.6,
+    "MAX": 8.0,
+    "MOY": 6.0
+  },
+  "blueTotalExperience": {
+    "MIN": 10098,
+    "MAX": 22224,
+    "MOY": 17928
+  },
+  "blueTotalMinionsKilled": {
+    "MIN": 90,
+    "MAX": 283,
+    "MOY": 216
+  },
+  "blueTotalJungleMinionsKilled": {
+    "MIN": 0,
+    "MAX": 92,
+    "MOY": 50
+  },
+  "blueGoldDiff": {
+    "MIN": -10830,
+    "MAX": 11467,
+    "MOY": 14
+  },
+  "blueExperienceDiff": {
+    "MIN": -9333,
+    "MAX": 8348,
+    "MOY": -34
+  },
+  "redWardsPlaced": {
+    "MIN": 6,
+    "MAX": 276,
+    "MOY": 22
+  },
+  "redWardsDestroyed": {
+    "MIN": 0,
+    "MAX": 24,
+    "MOY": 2
+  },
+  "redAssists": {
+    "MIN": 0,
+    "MAX": 28,
+    "MOY": 6
+  },
+  "redEliteMonsters": {
+    "MIN": 0,
+    "MAX": 2,
+    "MOY": 0
+  },
+  "redDragons": {
+    "MIN": 0,
+    "MAX": 1,
+    "MOY": 0
+  },
+  "redHeralds": {
+    "MIN": 0,
+    "MAX": 1,
+    "MOY": 0
+  },
+  "redTowersDestroyed": {
+    "MIN": 0,
+    "MAX": 2,
+    "MOY": 0
+  },
+  "redAvgLevel": {
+    "MIN": 4.8,
+    "MAX": 8.2,
+    "MOY": 6.0
+  },
+  "redTotalMinionsKilled": {
+    "MIN": 107,
+    "MAX": 289,
+    "MOY": 217
+  },
+  "redTotalJungleMinionsKilled": {
+    "MIN": 4,
+    "MAX": 92,
+    "MOY": 51
+  }
+}

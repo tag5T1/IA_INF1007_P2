@@ -71,8 +71,6 @@ PARAMETRES_NOMS: dict[str, str] = {
 if __name__ == "__main__":
     create_donnees_data()
 
-
-
     lol = importer_donnees()
     print(lol[0].columns)
 

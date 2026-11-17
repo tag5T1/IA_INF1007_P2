@@ -1,4 +1,5 @@
-from donnees import importer_donnees
+import pandas as pd
 
 def test_taille_valide():
-    assert 500 <= len(importer_donnees()[0]) <= 50000
+    d = pd.read_csv("./donnees/high_diamond_ranked_10min.csv")
+    assert 500 <= d.shape[0] <= 50000

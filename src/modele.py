@@ -31,6 +31,8 @@ def test_model():
     y_pred = load_model.predict(X_test)
 
     print("Logistic Regression model accuracy:", metrics.accuracy_score(y_test, y_pred))
+    return metrics.accuracy_score(y_test, y_pred)
+
 
 def load_model():
     data = importer_donnees()

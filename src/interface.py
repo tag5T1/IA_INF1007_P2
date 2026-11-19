@@ -4,6 +4,9 @@ from Champ import Champ
 from donnees import PARAMETRES_NOMS
 from sklearn import linear_model
 import pandas as pd
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import json, pathlib
 
 class Interface(tk.Tk):
     def __init__(self, params, model, infos):
@@ -20,13 +23,59 @@ class Interface(tk.Tk):
         top_bar = self.creer_top_bar(self)
         top_bar.pack(side="top")
 
-        self.colonne_entree_gauche = self.creer_colonne(self, self.parametres, True)
-        self.colonne_entree_gauche.pack(side='left', anchor='n', expand=True)
+        self.colonnes_frame = tk.Frame(self)
+        self.colonnes_frame.pack(fill="both")
 
-        self.colonne_entree_droite = self.creer_colonne(self, self.parametres, False)
+        self.colonne_entree_gauche = self.creer_colonne(self.colonnes_frame, self.parametres, True)
+        self.colonne_entree_gauche.pack(side='left', anchor='n', expand=True)
+        self.colonne_entree_droite = self.creer_colonne(self.colonnes_frame, self.parametres, False)
         self.colonne_entree_droite.pack(side='left', anchor='n', expand=True)
 
-        self.update_resultat()
+        self.bottom_frame = tk.Frame(self)
+        self.bottom_frame.pack(expand=True, fill="both")
+
+        self.graph_frame = tk.Frame(self.bottom_frame, height=100)
+        self.graph_frame.pack(side="right", expand=False, fill="both")
+
+        self.create_graph()
+
+        self.hist_frame = tk.Frame(self.bottom_frame, height=100)
+        self.hist_frame.pack(side="right", expand=True, fill="both")
+
+        self.hist = []
+        self.liste = TooltipListbox(self.hist_frame, self.hist)
+        self.liste.pack(expand=True, fill="both")
+
+        self.update_resultat(True)
+
+    def create_graph(self):
+        # the figure that will contain the plot
+        self.fig = Figure(figsize = (10, 4),
+                    dpi = 100)
+
+        # adding the subplot
+        self.plot = self.fig.add_subplot(111)
+
+        self.canvas_graph = FigureCanvasTkAgg(self.fig, master = self.graph_frame)  
+        self.canvas_graph.get_tk_widget().pack(expand=True, fill="both")
+
+    def tracer_graph(self):
+        self.plot.clear()
+        # plotting the graph
+        positions_x = list(range(len(self.parametres)))
+        self.plot.plot(positions_x, [d["MIN"] for d in self.infos.values()], linestyle="", marker="o", markersize=6, color="red", label="Min")
+        self.plot.plot(positions_x, [d["MAX"] for d in self.infos.values()], linestyle="", marker="o", markersize=6, color="blue", label="Max")
+        self.plot.plot(positions_x, self.parametres_valeurs, linestyle="", marker="o", markersize=6, color="green", label="Sélectionné")
+
+        self.plot.set_xticks(positions_x)
+        self.plot.set_xticklabels(
+            [PARAMETRES_NOMS.get(self.parametres[i], self.parametres[i]) for i in range(len(PARAMETRES_NOMS))],
+            rotation=36, ha="right", rotation_mode="anchor")
+
+        self.plot.legend()
+
+        self.fig.subplots_adjust(bottom=0.42)
+        self.canvas_graph.draw_idle()
 
     def creer_top_bar(self, container):
         frame = ttk.Frame(container)
@@ -54,11 +103,29 @@ class Interface(tk.Tk):
 
         return frame
 
-    def update_resultat(self):
+    def update_resultat(self, start=False):
         valeurs_pred = pd.DataFrame([self.parametres_valeurs], columns=self.parametres)
         prediction = self.model.predict_proba(valeurs_pred)
 
-        self.stringvar_resultat.set(str(round(prediction[0][1] * 100, 3)) + "%")
+        prediction = str(round(prediction[0][1] * 100, 3)) + "%"
+
+        self.stringvar_resultat.set(prediction)
+
+        pred_data = { "res": prediction,
+            "data": {self.parametres[i]: self.parametres_valeurs[i] for i in range(len(self.parametres))}
+            }
+
+        self.hist.clear()
+        self.hist.extend(self.get_historique())
+
+        if not start:
+            self.hist.append(pred_data)
+
+            self.set_historique()
+
+        self.liste.update_list()
+
+        self.tracer_graph()
 
     def set_random(self):
         for w in self.colonne_entree_gauche.winfo_children():
@@ -66,3 +133,87 @@ class Interface(tk.Tk):
 
         for w in self.colonne_entree_droite.winfo_children():
             w.set_random() # type: ignore
+
+        self.tracer_graph()
+
+    def get_historique(self):
+        with open(pathlib.Path(__file__).parent / "historique.json", encoding="utf-8", mode="r") as f:
+            return json.load(f)
+
+    def set_historique(self):
+        with open(pathlib.Path(__file__).parent / "historique.json", encoding="utf-8", mode="w") as f:
+            json.dump(self.hist, f, indent=2)
+
+class TooltipListbox(tk.Frame):
+    def __init__(self, master, hist):
+        super().__init__(master=master)
+        self.hist = hist
+        self.current_index = None
+        self.tooltip_window = None
+
+        self.listbox = tk.Listbox(self, font=("Arial", 12), width=35, height=6)
+        self.listbox.pack(expand=True, fill="both", padx=20, pady=20)
+
+        for item in self.hist:
+            self.listbox.insert(tk.END, item["res"])
+
+            self.listbox.delete(0)
+
+        self.listbox.bind("<Motion>", self._on_motion)
+        self.listbox.bind("<Leave>", self._hide_tooltip)
+
+    def update_list(self):
+        for i in range(len(self.hist)):
+            self.listbox.delete(0)
+
+        for item in self.hist[::-1]:
+            self.listbox.insert(tk.END, item["res"])
+
+    def _on_motion(self, event):
+        # Trouve l'index de l'élément sous le curseur
+        index = self.listbox.nearest(event.y)
+        bbox = self.listbox.bbox(index)
+
+        # Vérifie que la souris est bien au-dessus d'un élément réel (et pas dans le vide)
+        if bbox is None or event.y < bbox[1] or event.y > bbox[1] + bbox[3]:
+            self._hide_tooltip()
+            self.current_index = None
+            return
+
+        if index != self.current_index:
+            self.current_index = index
+            item_text = self.listbox.get(index)
+
+            tip_text = "".join([f"{list(self.hist[index]["data"].keys())[i]}: {list(self.hist[index]["data"].values())[i]}" + ("\n" if i % 5 == 0 else "") for i in range(len(self.hist[index]["data"]))])
+            self._show_tooltip(tip_text, event.x_root + 15, event.y_root + 10)
+        elif self.tooltip_window:
+            self.tooltip_window.geometry(f"+{event.x_root + 15}+{event.y_root + 10}")
+
+    def _show_tooltip(self, text, x, y):
+        self._hide_tooltip()
+        if not text:
+            return
+
+        win = tk.Toplevel(self)
+        win.wm_overrideredirect(True)  # Supprime la barre de titre et les bordures
+        win.wm_geometry(f"+{x}+{y}")
+
+        label = tk.Label(
+            win,
+            text=text,
+            background="#ffffe0",
+            foreground="#111111",
+            relief="solid",
+            borderwidth=1,
+            font=("Arial", 10),
+            padx=8,
+            pady=4,
+        )
+        label.pack()
+        self.tooltip_window = win
+
+    def _hide_tooltip(self, event=None):
+        if self.tooltip_window:
+            self.tooltip_window.destroy()
+            self.tooltip_window = None
+        self.current_index = None

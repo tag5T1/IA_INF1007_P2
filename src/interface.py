@@ -1,5 +1,4 @@
 import tkinter as tk
-from tkinter import ttk
 from Champ import ChampStr, ChampBool
 from donnees import PARAMETRES_NOMS, PARAMETRES_TYPES, set_historique, get_historique
 from sklearn import linear_model
@@ -8,7 +7,8 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 class Interface(tk.Tk):
-    def __init__(self, params, model, infos):
+    def __init__(self, params:list[str], model:linear_model.LogisticRegression, infos:dict[str, dict[str, int]]) -> None:
+        """Initialisation de l'interface"""
         self.parametres: list[str] = params
         self.parametres_valeurs = [0.0] * len(params)
         self.infos = infos
@@ -47,8 +47,9 @@ class Interface(tk.Tk):
 
         self.update_resultat(True)
 
-    def create_graph(self):
-        # la figure principale
+    def create_graph(self) -> None:
+        """Création du garphique intégré"""
+        # the figure that will contain the plot
         self.fig = Figure(figsize = (10, 4), dpi = 100)
 
         self.plot = self.fig.add_subplot(111)
@@ -56,7 +57,7 @@ class Interface(tk.Tk):
         self.canvas_graph = FigureCanvasTkAgg(self.fig, master = self.graph_frame)  
         self.canvas_graph.get_tk_widget().pack(expand=True, fill="both")
 
-    def tracer_graph(self):
+    def tracer_graph(self) -> None:
         self.plot.clear()
         # trace le graphique
         positions_x = list(range(len(self.parametres)))
@@ -74,8 +75,9 @@ class Interface(tk.Tk):
         self.fig.subplots_adjust(bottom=0.42)
         self.canvas_graph.draw_idle()
 
-    def creer_top_bar(self, container):
-        frame = ttk.Frame(container)
+    def creer_top_bar(self, container) -> tk.Frame:
+        """Création de la barre d'affichage du résultat."""
+        frame = tk.Frame(container)
 
         # Label du résultat
         self.stringvar_resultat = tk.StringVar(value="??%")
@@ -87,8 +89,9 @@ class Interface(tk.Tk):
 
         return frame    
 
-    def creer_colonne(self, container, parametres:list, est_colonne_gauche:bool):
-        frame = ttk.Frame(container)
+    def creer_colonne(self, container, parametres:list[str], est_colonne_gauche:bool) -> tk.Frame:
+        """Création d'une colonne de paramètres"""
+        frame = tk.Frame(container)
         if est_colonne_gauche:
             for i in range(0, round(len(parametres)/2) + 1):
                 if PARAMETRES_TYPES.get(self.parametres[i], "STR") == "STR":
@@ -106,7 +109,8 @@ class Interface(tk.Tk):
 
         return frame
 
-    def update_resultat(self, start=False):
+    def update_resultat(self, start:bool=False) -> None:
+        """Mise à jour de la prédiction."""
         valeurs_pred = pd.DataFrame([self.parametres_valeurs], columns=self.parametres)
         prediction = self.model.predict_proba(valeurs_pred)
 
@@ -130,7 +134,8 @@ class Interface(tk.Tk):
 
         self.tracer_graph()
 
-    def set_random(self):
+    def set_random(self) -> None:
+        """Affiche une valeur aléatoire dans chaque paramètre."""
         for w in self.colonne_entree_gauche.winfo_children():
             w.set_random() # type: ignore
 
@@ -140,7 +145,8 @@ class Interface(tk.Tk):
         self.tracer_graph()
 
 class TooltipListbox(tk.Frame):
-    def __init__(self, master, hist):
+    def __init__(self, master, hist:list[dict[str, str | dict[str, float]]]) -> None:
+        """Initialise la liste de l'historique."""
         super().__init__(master=master)
         self.hist = hist
         self.current_index = None
@@ -150,21 +156,23 @@ class TooltipListbox(tk.Frame):
         self.listbox.pack(expand=True, fill="both", padx=20, pady=20)
 
         for item in self.hist:
-            self.listbox.insert(tk.END, item["res"])
+            self.listbox.insert(tk.END, item["res"]) # type: ignore
 
             self.listbox.delete(0)
 
         self.listbox.bind("<Motion>", self._on_motion)
         self.listbox.bind("<Leave>", self._hide_tooltip)
 
-    def update_list(self):
+    def update_list(self) -> None:
+        """Met à jour la liste d'historique"""
         for i in range(len(self.hist)):
             self.listbox.delete(0)
 
         for item in self.hist[::-1]:
-            self.listbox.insert(tk.END, item["res"])
+            self.listbox.insert(tk.END, item["res"]) # type: ignore
 
-    def _on_motion(self, event):
+    def _on_motion(self, event) -> None:
+        """Détecte un mouvement de la souris et déplace la boite en fonction."""
         # Trouve l'index de l'élément sous le curseur
         index = self.listbox.nearest(event.y)
         bbox = self.listbox.bbox(index)
@@ -184,7 +192,8 @@ class TooltipListbox(tk.Frame):
         elif self.tooltip_window:
             self.tooltip_window.geometry(f"+{event.x_root + 15}+{event.y_root + 10}")
 
-    def _show_tooltip(self, text, x, y):
+    def _show_tooltip(self, text, x, y) -> None:
+        """Affiche la boite contenant la précision des paramètres."""
         self._hide_tooltip()
         if not text:
             return
@@ -207,7 +216,8 @@ class TooltipListbox(tk.Frame):
         label.pack()
         self.tooltip_window = win
 
-    def _hide_tooltip(self, event=None):
+    def _hide_tooltip(self, event=None) -> None:
+        """Cache la boite d'informations."""
         if self.tooltip_window:
             self.tooltip_window.destroy()
             self.tooltip_window = None

@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 import json, os
 
-def importer_donnees(source:str="./donnees/high_diamond_ranked_10min.csv") -> tuple[pd.DataFrame,pd.Series]:
+def importer_donnees(source:str="./donnees/high_diamond_ranked_10min.csv") -> tuple[pd.DataFrame, pd.Series]:
     """Importe et retire certaines colonnes des données CSV."""
     donnees = pd.read_csv(source)
 
@@ -27,7 +27,7 @@ def importer_donnees(source:str="./donnees/high_diamond_ranked_10min.csv") -> tu
     y = donnees["blueWins"]
     return (X, y)
 
-def create_donnees_data():
+def create_donnees_data() -> dict[str, int]:
     """Crée les données du modèle: Min, Max et Moyenne de chaque paramètre."""
     X, _ = importer_donnees()
 
@@ -38,18 +38,18 @@ def create_donnees_data():
 
     return res
 
-def split_data(donnees:tuple[pd.DataFrame,pd.Series]) -> list:
+def split_data(donnees:tuple[pd.DataFrame,pd.Series]) -> tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
     """Sépare les données en données de test et données d'entrainement"""
-    return train_test_split(donnees[0], donnees[1], test_size=0.2, random_state=1)
+    return tuple(train_test_split(donnees[0], donnees[1], test_size=0.2, random_state=1))
 
-def get_historique():
+def get_historique() -> list[dict[str, str | dict[str, float]]]:
     """Charge l'historique des prédictions."""
     if os.path.exists(os.path.join(os.getcwd(), "historique.json")):
         with open(os.path.join(os.getcwd(), "historique.json"), encoding="utf-8", mode="r") as f:
             return json.load(f)
     return []
 
-def set_historique(data):
+def set_historique(data:list[dict[str, str | dict[str, float]]]) -> None:
     """Sauvegarde l'historique des prédictions."""
     with open(os.path.join(os.getcwd(), "historique.json"), encoding="utf-8", mode="w") as f:
         json.dump(data, f, indent=2)

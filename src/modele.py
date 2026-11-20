@@ -4,6 +4,7 @@ from donnees import importer_donnees, split_data, create_donnees_data
 import joblib
 import json, os
 import numpy as np
+from exceptions import InfosInvalideError, ModeleInexistantError
 
 class Modele:
     def __init__(self) -> None:
@@ -50,17 +51,29 @@ class Modele:
         return identical_preds
 
     @staticmethod
-    def load_model() -> tuple[linear_model.LogisticRegression, list[str], dict[str, dict[str, int]]]:
+    def load_model(modele_name:str="log_reg_0.sav", modele_data_name:str="log_reg_0_data.json", donnees_modele_name:str="./donnees/high_diamond_ranked_10min.csv") -> tuple[linear_model.LogisticRegression, list[str], dict[str, dict[str, int]]]:
         """Charge le modèle et les données liées au modèle"""
-        data = importer_donnees()
+        data = importer_donnees(donnees_modele_name)
         X_train, X_test, y_train, y_test = split_data(data)
 
-        load_model:linear_model.LogisticRegression = joblib.load(open("modeles/log_reg_0.sav", 'rb'))
-        if os.path.exists(os.path.join(os.getcwd(), "modeles", "log_reg_0_data.json")):
-            with open(os.path.join(os.getcwd(), "modeles", "log_reg_0_data.json"), mode="r", encoding="utf-8") as f:
+        if os.path.isfile(os.path.join(os.getcwd(), "modeles", modele_name)) and os.path.exists(os.path.join(os.getcwd(), "modeles", modele_name)):
+            load_model:linear_model.LogisticRegression = joblib.load(open(os.path.join(os.getcwd(), "modeles", modele_name), 'rb'))
+        else:
+            raise ModeleInexistantError()
+
+        if os.path.exists(os.path.join(os.getcwd(), "modeles", modele_data_name)):
+            with open(os.path.join(os.getcwd(), "modeles", modele_data_name), mode="r", encoding="utf-8") as f:
                 infos = json.load(f)
         else:
             infos = {}
+
+        try:
+            infos["blueWardsPlaced"]
+            infos["blueWardsPlaced"]["MIN"]
+            infos["blueWardsPlaced"]["MAX"]
+            infos["blueWardsPlaced"]["MOY"]
+        except KeyError:
+            raise InfosInvalideError("Les informations n'ont pas le bon formattage ou informations")
 
         return load_model, list(X_train.columns), infos
 
@@ -73,3 +86,5 @@ if __name__ == "__main__":
     print("Précision:", modele.test_model())
 
     print(modele.compare_with_numpy())
+
+    modele.load_model()

@@ -2,10 +2,14 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 import json, os
+from exceptions import DonneesInexistantesError, HistoriqueInvalideError
 
 def importer_donnees(source:str="./donnees/high_diamond_ranked_10min.csv") -> tuple[pd.DataFrame, pd.Series]:
     """Importe et retire certaines colonnes des données CSV."""
-    donnees = pd.read_csv(source)
+    if os.path.exists(source):
+        donnees = pd.read_csv(source)
+    else:
+        raise DonneesInexistantesError()
 
     columns = list(donnees.columns)
     columns.remove("gameId")
@@ -42,10 +46,13 @@ def split_data(donnees:tuple[pd.DataFrame,pd.Series]) -> tuple[pd.DataFrame, pd.
     """Sépare les données en données de test et données d'entrainement"""
     return tuple(train_test_split(donnees[0], donnees[1], test_size=0.2, random_state=1))
 
-def get_historique() -> list[dict[str, str | dict[str, float]]]:
+def get_historique(file_name:str="historique.json") -> list[dict[str, str | dict[str, float]]]:
     """Charge l'historique des prédictions."""
-    if os.path.exists(os.path.join(os.getcwd(), "historique.json")):
-        with open(os.path.join(os.getcwd(), "historique.json"), encoding="utf-8", mode="r") as f:
+    if os.path.isfile(os.path.join(os.getcwd(), file_name)) and os.path.exists(os.path.join(os.getcwd(), file_name)):
+        with open(os.path.join(os.getcwd(), file_name), encoding="utf-8", mode="r") as f:
+            d = json.load(f)
+            if type(d) is not list[dict[str, str | dict[str, float]]]:
+                raise HistoriqueInvalideError()
             return json.load(f)
     return []
 

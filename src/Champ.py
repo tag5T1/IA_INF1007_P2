@@ -1,7 +1,6 @@
 import tkinter as tk
 import random
 from tkinter import ttk
-from exceptions import Input_Exception
 
 class Champ(tk.Frame):
     def __init__(self, container:ttk.Frame, index:int, label:str, param_val:list, infos):

@@ -50,10 +50,8 @@ class Interface(tk.Tk):
     def create_graph(self) -> None:
         """Création du garphique intégré"""
         # the figure that will contain the plot
-        self.fig = Figure(figsize = (10, 4),
-                    dpi = 100)
+        self.fig = Figure(figsize = (10, 4), dpi = 100)
 
-        # adding the subplot
         self.plot = self.fig.add_subplot(111)
 
         self.canvas_graph = FigureCanvasTkAgg(self.fig, master = self.graph_frame)  
@@ -61,7 +59,7 @@ class Interface(tk.Tk):
 
     def tracer_graph(self) -> None:
         self.plot.clear()
-        # plotting the graph
+        # trace le graphique
         positions_x = list(range(len(self.parametres)))
         self.plot.plot(positions_x, [d["MIN"] for d in self.infos.values()], linestyle="", marker="o", markersize=6, color="red", label="Min")
         self.plot.plot(positions_x, [d["MAX"] for d in self.infos.values()], linestyle="", marker="o", markersize=6, color="blue", label="Max")
@@ -81,8 +79,8 @@ class Interface(tk.Tk):
         """Création de la barre d'affichage du résultat."""
         frame = tk.Frame(container)
 
-        self.stringvar_resultat = tk.StringVar(value="??%")
         # Label du résultat
+        self.stringvar_resultat = tk.StringVar(value="??%")
         tk.Label(frame, text="Pourcentage de victoire des bleu:", font=("", 24)).pack(side='left')
         tk.Label(frame, textvariable=self.stringvar_resultat, font=("", 24)).pack(side='left')
 

@@ -9,6 +9,3 @@ class DonneesInexistantesError(Exception):
 
 class HistoriqueInvalideError(Exception):
     pass
-
-class InputError(ValueError):
-    pass

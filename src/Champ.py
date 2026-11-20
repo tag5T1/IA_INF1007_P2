@@ -1,6 +1,8 @@
 import tkinter as tk
 import random
 from tkinter import ttk
+from tkinter import messagebox
+from exceptions import InputError
 
 class Champ(tk.Frame):
     def __init__(self, container:ttk.Frame, index:int, label:str, param_val:list, infos):
@@ -19,14 +21,34 @@ class Champ(tk.Frame):
         self.champ.pack(side='right')
 
     def changer_valeur_param(self, var, index, mode):
+        entree:str = self.tk_var.get()
+
+        if entree == "-":
+            return
+
         try:
-            self.parametres_valeurs[self.index] = float(self.tk_var.get())
+            value:float = float(entree)
         except ValueError:
             if self.tk_var.get() != "":
                 self.tk_var.set(self.parametres_valeurs[self.index])
+                messagebox.showerror("Erreur de saisie", "La valeur entrée est invalide. Veuillez saisir un nombre.")
+            return
+
+        if value < self.infos["MIN"]/2 or value > self.infos["MAX"]*2:
+            # clamp entre les valeurs autorisées
+            if value > self.infos["MAX"]*2:
+                self.tk_var.set(self.infos["MAX"]*2)
+            else:
+                self.tk_var.set(self.infos["MIN"]/2)
+            
+            messagebox.showerror("Valeur impossible", f"La valeur entrée est irréaliste. Veuillez saisir un nombre entre {self.infos["MIN"]/2} et {self.infos["MAX"]*2}.")
+            return
+
+        self.parametres_valeurs[self.index] = value
+            
 
     def set_random(self):
-        self.tk_var.set(random.randint(int(self.infos["MIN"]),int(self.infos["MAX"]))) # type: ignore
+        self.tk_var.set(random.randint(int(self.infos["MIN"]), int(self.infos["MAX"]))) # type: ignore
 
 
 

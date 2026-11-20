@@ -22,7 +22,21 @@ Un décorateur a été utilisé pour définir une classe statique dans la classe
 
 ## Coverage
 
-#Todo
+❯ coverage report -m
+
+Name                    Stmts   Miss  Cover   Missing
+-----------------------------------------------------
+src/donnees.py             58     17    71%   36-43, 56, 61-62, 125-138
+
+src/exceptions.py           8      0   100%
+
+src/modele.py              59     16    73%   17-23, 68, 72-74, 78, 81, 84-90
+
+tests/test_donnees.py      15      0   100%
+
+tests/test_modele.py       18      0   100%
+-----------------------------------------------------
+TOTAL                     158     33    79%
 
 ## Modèle
 

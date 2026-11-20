@@ -3,6 +3,7 @@ from sklearn import metrics
 from donnees import importer_donnees, split_data, create_donnees_data
 import joblib
 import json, os
+import numpy as np
 
 class Modele:
     def __init__(self) -> None:
@@ -26,6 +27,25 @@ class Modele:
         print("Logistic Regression model accuracy:", metrics.accuracy_score(self.y_test, y_pred))
         return metrics.accuracy_score(self.y_test, y_pred)
 
+    def compare_with_numpy(self):
+        load_model: linear_model.LogisticRegression = joblib.load(open("modeles/log_reg_0.sav", 'rb'))
+
+        X = np.asarray(self.X_test, dtype=np.float64)
+        w = load_model.coef_.ravel()       # forme (n_features,) pour classification binaire
+        b = float(load_model.intercept_[0])
+
+        # Calcul vectoriel NumPy (score linéaire + sigmoïde)
+        z = X @ w + b
+        proba_pos_np = 1.0 / (1.0 + np.exp(-z))
+        pred_np = (proba_pos_np >= 0.5).astype(int)
+
+        # Résultats scikit-learn
+        pred_sk = load_model.predict(self.X_test)
+
+        identical_preds = np.array_equal(pred_np, pred_sk)
+
+        return identical_preds
+
     @staticmethod
     def load_model():
         data = importer_donnees()
@@ -47,3 +67,5 @@ if __name__ == "__main__":
     modele = Modele()
     modele.train_model()
     modele.test_model()
+
+    print(modele.compare_with_numpy())

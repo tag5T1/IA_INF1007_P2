@@ -79,6 +79,36 @@ PARAMETRES_NOMS: dict[str, str] = {
     'redTotalJungleMinionsKilled': "Total de jungle minions rouge tués"
     }
 
+PARAMETRES_TYPES: dict[str, str] = {
+    'blueWardsPlaced': "STR",
+    'blueWardsDestroyed': "STR",
+    'blueFirstBlood': "BOOL",
+    'blueKills': "STR",
+    'blueDeaths': "STR",
+    'blueAssists': "STR",
+    'blueEliteMonsters': "STR",
+    'blueDragons': "STR",
+    'blueHeralds': "STR",
+    'blueTowersDestroyed': "STR",
+    'blueTotalGold': "STR",
+    'blueAvgLevel': "STR",
+    'blueTotalExperience': "STR",
+    'blueTotalMinionsKilled': "STR",
+    'blueTotalJungleMinionsKilled': "STR",
+    'blueGoldDiff': "STR",
+    'blueExperienceDiff': "STR",
+    'redWardsPlaced': "STR",
+    'redWardsDestroyed': "STR",
+    'redAssists': "STR",
+    'redEliteMonsters': "STR",
+    'redDragons': "STR",
+    'redHeralds': "STR",
+    'redTowersDestroyed': "STR",
+    'redAvgLevel': "STR",
+    'redTotalMinionsKilled': "STR",
+    'redTotalJungleMinionsKilled': "STR"
+    }
+
 if __name__ == "__main__":
     create_donnees_data()
 

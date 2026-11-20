@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
-from Champ import Champ
-from donnees import PARAMETRES_NOMS, set_historique, get_historique
+from Champ import ChampStr, ChampBool
+from donnees import PARAMETRES_NOMS, PARAMETRES_TYPES, set_historique, get_historique
 from sklearn import linear_model
 import pandas as pd
 from matplotlib.figure import Figure
@@ -41,6 +41,7 @@ class Interface(tk.Tk):
         self.hist_frame = tk.Frame(self.bottom_frame, height=100)
         self.hist_frame.pack(side="right", expand=True, fill="both")
 
+        self.hist = []
         self.liste = TooltipListbox(self.hist_frame, self.hist)
         self.liste.pack(expand=True, fill="both")
 
@@ -92,11 +93,17 @@ class Interface(tk.Tk):
         frame = ttk.Frame(container)
         if est_colonne_gauche:
             for i in range(0, round(len(parametres)/2) + 1):
-                champ = Champ(frame, i, PARAMETRES_NOMS.get(self.parametres[i], self.parametres[i]), self.parametres_valeurs, self.infos.get(self.parametres[i], {"MIN": 0, "MAX": 0, "MOY": 0}))
+                if PARAMETRES_TYPES.get(self.parametres[i], "STR") == "STR":
+                    champ = ChampStr(frame, i, PARAMETRES_NOMS.get(self.parametres[i], self.parametres[i]), self.parametres_valeurs, self.infos.get(self.parametres[i], {"MIN": 0, "MAX": 0, "MOY": 0}))
+                else:
+                    champ = ChampBool(frame, i, PARAMETRES_NOMS.get(self.parametres[i], self.parametres[i]), self.parametres_valeurs, self.infos.get(self.parametres[i], {"MIN": 0, "MAX": 0, "MOY": 0}))
                 champ.pack(anchor="e")
         else:
             for i in range(round(len(parametres)/2) + 1, len(parametres)):
-                champ = Champ(frame, i, PARAMETRES_NOMS.get(self.parametres[i], self.parametres[i]), self.parametres_valeurs, self.infos.get(self.parametres[i], {"MIN": 0, "MAX": 0, "MOY": 0}))
+                if PARAMETRES_TYPES.get(self.parametres[i], "STR") == "STR":
+                    champ = ChampStr(frame, i, PARAMETRES_NOMS.get(self.parametres[i], self.parametres[i]), self.parametres_valeurs, self.infos.get(self.parametres[i], {"MIN": 0, "MAX": 0, "MOY": 0}))
+                else:
+                    champ = ChampBool(frame, i, PARAMETRES_NOMS.get(self.parametres[i], self.parametres[i]), self.parametres_valeurs, self.infos.get(self.parametres[i], {"MIN": 0, "MAX": 0, "MOY": 0}))
                 champ.pack(anchor="e")
 
         return frame
@@ -113,7 +120,8 @@ class Interface(tk.Tk):
             "data": {self.parametres[i]: self.parametres_valeurs[i] for i in range(len(self.parametres))}
             }
 
-        self.hist = get_historique()
+        self.hist.clear()
+        self.hist.extend(get_historique())
 
         if not start:
             self.hist.append(pred_data)

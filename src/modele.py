@@ -56,7 +56,7 @@ class Modele:
         data = importer_donnees(donnees_modele_name)
         X_train, X_test, y_train, y_test = split_data(data)
 
-        if os.path.exists(os.path.join(os.getcwd(), "modeles", modele_name)):
+        if os.path.isfile(os.path.join(os.getcwd(), "modeles", modele_name)) and os.path.exists(os.path.join(os.getcwd(), "modeles", modele_name)):
             load_model:linear_model.LogisticRegression = joblib.load(open(os.path.join(os.getcwd(), "modeles", modele_name), 'rb'))
         else:
             raise ModeleInexistantError()

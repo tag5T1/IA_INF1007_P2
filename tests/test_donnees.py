@@ -9,7 +9,7 @@ def test_taille_valide():
 
 def test_importer_donnees():
     with pytest.raises(DonneesInexistantesError):
-        importer_donnees(source="")
+        importer_donnees(source="/e")
 
 def test_get_historique_0():
     with pytest.raises(HistoriqueInvalideError):

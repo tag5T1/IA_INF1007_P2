@@ -48,7 +48,7 @@ def split_data(donnees:tuple[pd.DataFrame,pd.Series]) -> tuple[pd.DataFrame, pd.
 
 def get_historique(file_name:str="historique.json") -> list[dict[str, str | dict[str, float]]]:
     """Charge l'historique des prédictions."""
-    if os.path.exists(os.path.join(os.getcwd(), file_name)):
+    if os.path.isfile(os.path.join(os.getcwd(), file_name)) and os.path.exists(os.path.join(os.getcwd(), file_name)):
         with open(os.path.join(os.getcwd(), file_name), encoding="utf-8", mode="r") as f:
             d = json.load(f)
             if type(d) is not list[dict[str, str | dict[str, float]]]:

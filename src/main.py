@@ -1,7 +1,7 @@
 from interface import Interface
-from modele import load_model
+from modele import Modele
 
-model, params, infos = load_model()
+model, params, infos = Modele.load_model()
 
 inta = Interface(params, model, infos)
 

@@ -1,12 +1,11 @@
 import tkinter as tk
 from tkinter import ttk
 from Champ import Champ
-from donnees import PARAMETRES_NOMS
+from donnees import PARAMETRES_NOMS, set_historique, get_historique
 from sklearn import linear_model
 import pandas as pd
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import json, pathlib
 
 class Interface(tk.Tk):
     def __init__(self, params, model, infos):
@@ -42,7 +41,6 @@ class Interface(tk.Tk):
         self.hist_frame = tk.Frame(self.bottom_frame, height=100)
         self.hist_frame.pack(side="right", expand=True, fill="both")
 
-        self.hist = []
         self.liste = TooltipListbox(self.hist_frame, self.hist)
         self.liste.pack(expand=True, fill="both")
 
@@ -115,13 +113,12 @@ class Interface(tk.Tk):
             "data": {self.parametres[i]: self.parametres_valeurs[i] for i in range(len(self.parametres))}
             }
 
-        self.hist.clear()
-        self.hist.extend(self.get_historique())
+        self.hist = get_historique()
 
         if not start:
             self.hist.append(pred_data)
 
-            self.set_historique()
+            set_historique(self.hist)
 
         self.liste.update_list()
 
@@ -135,14 +132,6 @@ class Interface(tk.Tk):
             w.set_random() # type: ignore
 
         self.tracer_graph()
-
-    def get_historique(self):
-        with open(pathlib.Path(__file__).parent / "historique.json", encoding="utf-8", mode="r") as f:
-            return json.load(f)
-
-    def set_historique(self):
-        with open(pathlib.Path(__file__).parent / "historique.json", encoding="utf-8", mode="w") as f:
-            json.dump(self.hist, f, indent=2)
 
 class TooltipListbox(tk.Frame):
     def __init__(self, master, hist):

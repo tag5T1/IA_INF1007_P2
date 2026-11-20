@@ -2,7 +2,6 @@ import tkinter as tk
 import random
 from tkinter import ttk
 from tkinter import messagebox
-from exceptions import InputError
 
 class Champ(tk.Frame):
     def __init__(self, container:tk.Frame, index:int, label:str, param_val:list, infos:dict[str, int]) -> None:
